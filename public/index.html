@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z3nterenceseah Dev Page</title>
+</head>
+
+<body>
+  <script src='https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'></script>
+  <!-- OPTION 1 FOR COTTON ON-->
+  <!--<script type='text/javascript'>
+    const accessToken = '3dc392263e76427b4fe16a13df72be417dcd4001a0e43cab45fb1dd004e775fc';
+    const locale = navigator.language.toLowerCase();
+    let groupsToDisplay = [];
+
+    axios.get('https://z3nterenceseah.zendesk.com/api/v2/groups', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then(response => {
+        groups = response.data.groups;
+
+        groups.forEach(group => {
+          let group_description = group.description.substring(0, 2).toLowerCase();
+
+          switch (locale) {
+            case "pt":
+              if (group_description === "pt") {
+                groupsToDisplay.push(group.name);
+              }
+              break;
+            default:
+              if (group_description === "en") {
+                groupsToDisplay.push(group.name);
+              }
+              break;
+          }
+
+        });
+        updateZendeskSettings(groupsToDisplay);
+      })
+      .catch(error => {
+        console.error('Error fetching groups:', error);
+      });
+
+    function updateZendeskSettings(groups) {
+      zE('webWidget', 'updateSettings', {
+        webWidget: {
+          chat: {
+            departments: {
+              enabled: groups
+            }
+          }
+        }
+      });
+    }
+  </script>-->
+  <script id="ze-snippet"
+    src="https://static.zdassets.com/ekr/snippet.js?key=60a7629c-8050-4e5e-a543-e4eee7ea5156"> </script>
+  <!-- OPTION 2 FOR COTTON ON-->
+  <!--<script>
+    const locale = navigator.language.toLowerCase();
+    let groupsToDisplay = [];
+    zE('webWidget:on', 'chat:connected', function () {
+      const departments = zE('webWidget:get', 'chat:departments');
+      departments.forEach(department => {
+        let group_name = department.name.substring(0, 2).toLowerCase();
+
+        switch (locale) {
+          case "pt":
+            if (group_name === "pt") {
+              groupsToDisplay.push(department.name);
+            }
+            break;
+          default:
+            if (group_name === "en") {
+              groupsToDisplay.push(department.name);
+            }
+        }
+      });
+      zE('webWidget', 'updateSettings', {
+        webWidget: {
+          chat: {
+            departments: {
+              enabled: groupsToDisplay
+            }
+          }
+        }
+      });
+    });
+  </script>-->
+</body>
+
+</html>
