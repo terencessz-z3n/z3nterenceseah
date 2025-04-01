@@ -5,23 +5,22 @@ const { Parser } = require('json2csv');
 const fs = require('fs');
 const csv = require('csvtojson');
 
-const pauseForOneMinute = () => {
-    console.info('Pausing for 1 minute...');
+const pause = () => {
+    console.info('Pausing...');
     return new Promise(resolve => setTimeout(() => {
-        console.info('Resuming after 1 minute');
         resolve();
-    }, 60000));
+    }, 15000));
 };
 
 const handle40XError = async (errorStatus) => {
-    console.info('No Tickets (' + errorStatus + ') encountered. Pausing for 1 minute before retrying.');
-    await pauseForOneMinute();
+    console.info('Error (' + errorStatus + ') encountered. Pausing before retrying.');
+    await pause();
     return true;
 }
 
 const handle429Error = async (retryAfter) => {
     const secondsToWait = Number(retryAfter);
-    console.info('Too Many Requests (429) encountered. Pausing for ' + secondsToWait * 1000 + ' seconds before retrying.');
+    console.info('Too Many Requests (429) encountered. Pausing for ' + secondsToWait + ' seconds before retrying.');
     await new Promise(resolve => setTimeout(resolve, secondsToWait * 1000));
 
     return true;
@@ -863,46 +862,10 @@ exports.exportTickets = async () => {
 }
 
 //Bulk Delete Tickets
-exports.bulkDeleteTickets = async (req, res) => {
-    let jobCount = 0;
-    let requestBody = req.body;
-
+exports.bulkDeleteTickets = async () => {
     while (true) {
         try {
-            const bulkDeleteTicketsRequest = {
-                'status': requestBody.status,
-                'pageSize': 100
-            };
-            console.info('Deleting tickets status that are: ' + bulkDeleteTicketsRequest.status);
-
-            //List Search method can be used if there is a condition to sort by date
-            let listSearchTicketsResults = await ticket.listSearchTickets(bulkDeleteTicketsRequest);
-            let listSearchTicketsResultsStatus = listSearchTicketsResults.status;
-
-            let listSearchTicketsResponse = listSearchTicketsResults.data.results;
-            let listSearchTicketsResultsCount = listSearchTicketsResults.data.count;
-
-            if (listSearchTicketsResultsStatus >= 200 && listSearchTicketsResultsStatus <= 300) {
-                console.info('Tickets to be soft deleted count: ' + listSearchTicketsResultsCount);
-
-                if (listSearchTicketsResultsCount > 0) {
-                    let toDeleteTicketIdsArray = listSearchTicketsResponse.map(ticket => ticket.id);
-                    let toDeleteTicketIdsString = toDeleteTicketIdsArray.join(',');
-
-                    console.info('Soft deleting ticket IDs: ' + toDeleteTicketIdsString);
-
-                    await ticket.bulkDeleteTickets(toDeleteTicketIdsString);
-                }
-            } else {
-                if (await handle40XError(listSearchTicketsResultsStatus)) {
-                    continue;
-                }
-            }
-
-            //await pauseForThirtySeconds();
-
-            //Export Search does not support sort by so it can be used if we are sure of just focusing on the ticket status and not dates
-            /*let exportSearchTicketsResult = await ticket.exportSearchTickets(bulkDeleteTicketsRequest);
+            let exportSearchTicketsResult = await ticket.exportSearchTickets();
             let exportSearchTicketResultStatus = exportSearchTicketsResult.status;
 
             if (exportSearchTicketResultStatus >= 200 && exportSearchTicketResultStatus <= 300) {
@@ -911,7 +874,6 @@ exports.bulkDeleteTickets = async (req, res) => {
                 let toDeleteTicketIdsString = toDeleteTicketIdsArray.join(',');
 
                 if (toDeleteTicketIdsArray.length > 0) {
-                    console.info('Soft deleting ticket IDs: ' + toDeleteTicketIdsString)
                     try {
                         await ticket.bulkDeleteTickets(toDeleteTicketIdsString);
                     }
@@ -925,10 +887,8 @@ exports.bulkDeleteTickets = async (req, res) => {
                         }
                         throw error;
                     }
-                    //await pauseForThirtySeconds();
                 }
             }
-            await pauseForThirtySeconds();*/
 
             //Get all deleted tickets and permanently delete them
             let listDeletedTicketsResult = await ticket.listDeletedTickets();
@@ -944,8 +904,6 @@ exports.bulkDeleteTickets = async (req, res) => {
                     let toPermanentDeleteTicketIdsArray = listDeletedTicketsResponse.map(ticket => ticket.id);
                     let toPermanentDeleteTicketIdsString = toPermanentDeleteTicketIdsArray.join(',');
 
-                    console.info('Hard deleting ticket IDs: ' + toPermanentDeleteTicketIdsString);
-
                     await ticket.deleteMultipleTicketsPermanent(toPermanentDeleteTicketIdsString);
                 }
             }
@@ -959,7 +917,7 @@ exports.bulkDeleteTickets = async (req, res) => {
                 console.info('Current Active Job: ' + jobCount);
 
                 if (jobCount > 30) {
-                    await pauseForThirtySeconds();
+                    await pause();
                 }
             }
 

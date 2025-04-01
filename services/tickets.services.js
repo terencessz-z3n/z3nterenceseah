@@ -45,7 +45,7 @@ const listSearchTickets = async (req) => {
 
 //Export Search Tickets
 const exportSearchTickets = async (req) => {
-    const exportSearchTicketsApi = `${zendeskapiurl}/search/export?filter[type]=ticket&page[size]=1000&query=created%3E2024-07-01%20created%3C2024-07-31`;
+    const exportSearchTicketsApi = `${zendeskapiurl}/search.json?query=type:ticket requester:aablo@email.com`;
 
     return await axios.get(exportSearchTicketsApi, axiosConfig);
 }
