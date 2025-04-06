@@ -22,7 +22,6 @@ require('./routes/authentication.routes')(app);
 require('./routes/users.routes')(app);
 require('./routes/tickets.routes')(app);
 require('./routes/sunco.routes')(app);
-require('./routes/cronjob.routes')(app);
 require('./routes/customobject.routes')(app);
 require('./routes/xaas.routes')(app);
 
