@@ -24,11 +24,11 @@ exports.authenticate = async (req, res) => {
 
         if (userData.email === "admin@email.com") {
             messagePayload = {
-                external_id: "ZDUser1@gmail.com",
-                email: "ZDUser1@gmail.com",
+                external_id: "019656a5-dda4-7eda-8b01-424e73079376",
+                email: "zdu1@email.com",
                 email_verified: true,
-                exp: Math.floor(Date.now() / 1000) + 60,
-                name: "ZD User 1",
+                //exp: Math.floor(Date.now() / 1000) + 60,
+                name: "Zendesk User 1",
                 scope: "user"
             }
         } else {
