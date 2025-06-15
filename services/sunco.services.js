@@ -259,17 +259,17 @@ const postMessage = async (payload) => {
 
                     break;
                 default:
-                    messagePost.setContent({
-                        type: 'text',
-                        text: 'Sorry, I do not understand your question. Can I connect you to an agent?',
-                        actions: [
-                            {
-                                text: 'Talk to an agent',
-                                payload: '',
-                                type: 'reply'
-                            }
-                        ]
-                    });
+                /*messagePost.setContent({
+                    type: 'text',
+                    text: 'Sorry, I do not understand your question. Can I connect you to an agent?',
+                    actions: [
+                        {
+                            text: 'Talk to an agent',
+                            payload: '',
+                            type: 'reply'
+                        }
+                    ]
+                });*/
             }
 
             return await apiInstance.postMessage(appId, conversationId, messagePost);

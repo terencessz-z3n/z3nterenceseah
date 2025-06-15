@@ -6,6 +6,10 @@ const messageKeyId = process.env.MESSAGEKEYID;
 const suncoSecret = process.env.SUNCOSECRET;
 const suncoKeyId = process.env.SUNCOKEYID;
 
+//erulearning
+//const messageSecret = "0Ls389J10U92ePMuTTTejVhIX-5wJyfGvndVX87lCMnWUKEe17R5bVqEf7O_8w559oKcC9jtCtpZdTB5yS4X9g";
+//const messageKeyId = "app_6809dc2190b09087ef024d93"
+
 //Generate JWT Token
 const generateToken = async (type, req) => {
     switch (type) {

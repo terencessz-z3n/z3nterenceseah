@@ -10,49 +10,45 @@ const zendeskURL = process.env.ZENDESKURL;
 //Authenticate User
 exports.authenticate = async (req, res) => {
     try {
-        const email = req.body.email;
-        const password = req.body.password;
-        const verifyUserResult = await User.verifyUser(email, password);
-
-        if (!verifyUserResult.success) {
-            return res.status(403).send("Invalid Login Credentials");
-        }
-
-        const userData = verifyUserResult.data;
-
         let messagePayload = {};
+        const isAdmin = req.body.isAdmin;
 
-        if (userData.email === "admin@email.com") {
+        if(isAdmin) {
             messagePayload = {
-                external_id: "019656a5-dda4-7eda-8b01-424e73079376",
-                email: "zdu1@email.com",
+                external_id: "admin-01976f0f-1ab5-7d63-b123-8e84e9637b5f",
+                email: "admin@email.com",
                 email_verified: true,
-                //exp: Math.floor(Date.now() / 1000) + 60,
-                name: "Zendesk User 1",
-                scope: "user"
+                name: "Administrator",
+                scope: "user",
+            }
+
+            const adminJwtExpiryMinutes = req.body.adminJwtExpiryMinutes;
+
+            if (typeof adminJwtExpiryMinutes === 'number' && adminJwtExpiryMinutes > 0) {
+                messagePayload.exp = Math.floor(Date.now() / 1000) + adminJwtExpiryMinutes * 60;
             }
         } else {
+            const prefix = req.body.newUserExternalIdPrefix;
+            const uniqueId = uuid.v4();
+
             messagePayload = {
-                external_id: userData.id,
-                email: userData.email,
-                email_verified: true,
-                //exp: Math.floor(Date.now() / 1000) + 3600,
-                name: userData.name,
-                scope: "user"
+                external_id: `${prefix}-${uniqueId}`,
+                email: req.body.newUserEmail,
+                email_verified: req.body.newUserEmailVerified,
+                name: req.body.newUserName,
+                scope: "user",
+            }
+
+            const jwtExpiryMinutes = req.body.jwtExpiryMinutes;
+
+            if (typeof jwtExpiryMinutes === 'number' && jwtExpiryMinutes > 0) {
+                messagePayload.exp = Math.floor(Date.now() / 1000) + jwtExpiryMinutes * 60;
             }
         }
-
-        const suncoPayload = {
-            scope: 'user',
-            external_id: userData.email
-        }
-
         const messageToken = await jwt.generateToken("message", messagePayload);
-        const suncoToken = await jwt.generateToken("sunco", suncoPayload);
 
         let tokenResponse = {};
         tokenResponse.messageToken = messageToken;
-        tokenResponse.suncoToken = suncoToken;
 
         return res.status(201).send(tokenResponse);
     }

@@ -15,6 +15,8 @@ const corsOptions = {
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(cors(corsOptions));
+app.use(express.json({ limit: '1mb' })); // Increase if needed
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 //Define routes
 require('./routes/omnichannel.routes')(app);

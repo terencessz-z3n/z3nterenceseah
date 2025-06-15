@@ -6,5 +6,17 @@ module.exports = app => {
 
     router.post('/getsampleexternaldata/', xaas.getSampleExternalData);
 
+    router.post('/getorderdetails/:order_id', xaas.getOrderDetails);
+
+    router.get('/getsimpleorderdetails/:order_id', xaas.getSimpleOrderDetails);
+
+    router.post('/getorderid',xaas.getOrderID);
+
+    router.post('/getshopid/', xaas.getShopID);
+
+    router.post('/getchannel/', xaas.getChannel);
+
+    router.get('/getigfollowersbyusername/:username', xaas.getIGFollowersByUsername);
+
     app.use('/xaas', router);
 }
