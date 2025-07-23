@@ -5,7 +5,27 @@ const axios = require('axios');
 const jwtSharedKey = process.env.JWTSHAREDKEY;
 const zendeskURL = process.env.ZENDESKURL
 
-exports.getSimpleOrderDetails = async (req, res) => {
+exports.listOrders = async (req, res) => {
+    res.send({
+        "response_code": "200",
+        "result": {
+            "orders": [
+                {
+                    "order_id": "12345",
+                    "order_status": "Delivered",
+                    "order_grand_total": "SGD 1000"
+                },
+                {
+                    "order_id": "67890",
+                    "order_status": "Pending",
+                    "order_grand_total": "SGD 500"
+                }
+            ]
+        }
+    })
+}
+
+exports.getOrder = async (req, res) => {
     res.send({
         "response_code": "200",
         "result": {
@@ -15,6 +35,8 @@ exports.getSimpleOrderDetails = async (req, res) => {
         }
     })
 }
+
+/*
 exports.getOrderDetails = async (req, res) => {
     console.log(req.body.order_id);
     res.send({
@@ -99,11 +121,7 @@ exports.getChannel = async (req, res) => {
         }
     })
 }
-
-exports.getSampleExternalData = async (req, res) => {
-    console.log(req.body.end_chat_time)
-    console.log(req.body.end_chat_message)
-}
+*/
 
 exports.getIGFollowersByUsername = async (req, res) => {
     const APIFY_TOKEN = 'apify_api_fnpcbQkUO6XBJGg97QxfPdAfFBXWYG3jhKe2';
@@ -136,4 +154,3 @@ exports.getIGFollowersByUsername = async (req, res) => {
         });
     }
 }
-

@@ -19,7 +19,7 @@ exports.webhook = async (req, res) => {
 }
 
 exports.webhookNonConnected = async (req, res) => {
-    //console.log('Sunco Webhook Payload:\n', JSON.stringify(req.body, null, 4));
+    //console.log('Sunco Non Connected Webhook Payload:\n', JSON.stringify(req.body, null, 4));
 }
 
 exports.createConversation = async (req, res) => {

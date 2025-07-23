@@ -4,17 +4,17 @@ const xaas = require('../controllers/xaas.controller');
 module.exports = app => {
     var router = require('express').Router();
 
-    router.post('/getsampleexternaldata/', xaas.getSampleExternalData);
+    router.get('/listorders', xaas.listOrders);
 
-    router.post('/getorderdetails/:order_id', xaas.getOrderDetails);
+    router.get('/getorder/:order_id', xaas.getOrder);
 
-    router.get('/getsimpleorderdetails/:order_id', xaas.getSimpleOrderDetails);
+    //router.post('/getorderdetails/:order_id', xaas.getOrderDetails);
 
-    router.post('/getorderid',xaas.getOrderID);
+    //router.post('/getorderid',xaas.getOrderID);
 
-    router.post('/getshopid/', xaas.getShopID);
+    //router.post('/getshopid/', xaas.getShopID);
 
-    router.post('/getchannel/', xaas.getChannel);
+    //router.post('/getchannel/', xaas.getChannel);
 
     router.get('/getigfollowersbyusername/:username', xaas.getIGFollowersByUsername);
 

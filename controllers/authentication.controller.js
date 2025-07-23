@@ -11,9 +11,9 @@ const zendeskURL = process.env.ZENDESKURL;
 exports.authenticate = async (req, res) => {
     try {
         let messagePayload = {};
-        const isAdmin = req.body.isAdmin;
+        const userType = req.body.userType;
 
-        if(isAdmin) {
+        if(userType === "admin") {
             messagePayload = {
                 external_id: "admin-01976f0f-1ab5-7d63-b123-8e84e9637b5f",
                 email: "admin@email.com",
@@ -27,7 +27,7 @@ exports.authenticate = async (req, res) => {
             if (typeof adminJwtExpiryMinutes === 'number' && adminJwtExpiryMinutes > 0) {
                 messagePayload.exp = Math.floor(Date.now() / 1000) + adminJwtExpiryMinutes * 60;
             }
-        } else {
+        } else if(userType === "newUser") {
             const prefix = req.body.newUserExternalIdPrefix;
             const uniqueId = uuid.v4();
 
@@ -44,7 +44,25 @@ exports.authenticate = async (req, res) => {
             if (typeof jwtExpiryMinutes === 'number' && jwtExpiryMinutes > 0) {
                 messagePayload.exp = Math.floor(Date.now() / 1000) + jwtExpiryMinutes * 60;
             }
+        } else if (userType === "existingUser") {
+            const prefix = req.body.existingUserExternalIdPrefix;
+            const uniqueId = uuid.v4();
+
+            messagePayload = {
+                external_id: `${prefix}-${uniqueId}`,
+                email: req.body.existingUserEmail,
+                email_verified: req.body.existingUserEmailVerified,
+                name: req.body.existingUserName,
+                scope: "user",
+            }
+
+            const jwtExpiryMinutes = req.body.jwtExpiryMinutes;
+
+            if (typeof jwtExpiryMinutes === 'number' && jwtExpiryMinutes > 0) {
+                messagePayload.exp = Math.floor(Date.now() / 1000) + jwtExpiryMinutes * 60;
+            }
         }
+
         const messageToken = await jwt.generateToken("message", messagePayload);
 
         let tokenResponse = {};
