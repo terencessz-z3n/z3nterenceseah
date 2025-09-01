@@ -11,11 +11,13 @@ exports.listOrders = async (req, res) => {
         "result": {
             "orders": [
                 {
+                    "image_url": "https://z3ntscap.tstechlab.com/hc/theming_assets/01J1SPKBMCSS8JBWY4BKTM5QY0",
                     "order_id": "12345",
                     "order_status": "Delivered",
                     "order_grand_total": "SGD 1000"
                 },
                 {
+                    "image_url": "https://z3ntscap.tstechlab.com/hc/theming_assets/01J1SPKBMCSS8JBWY4BKTM5QY0",
                     "order_id": "67890",
                     "order_status": "Pending",
                     "order_grand_total": "SGD 500"
@@ -26,9 +28,11 @@ exports.listOrders = async (req, res) => {
 }
 
 exports.getOrder = async (req, res) => {
+    console.log("Fetching order details for order ID:", req.order_id);
     res.send({
         "response_code": "200",
         "result": {
+            "image_url": "https://z3ntscap.tstechlab.com/hc/theming_assets/01J1SPKBMCSS8JBWY4BKTM5QY0",
             "order_id": "12345",
             "order_status": "Delivered",
             "order_grand_total": "SGD 1000"
@@ -154,3 +158,23 @@ exports.getIGFollowersByUsername = async (req, res) => {
         });
     }
 }
+
+exports.googlerecaptcha = async (req, res) => {
+    const recaptchaToken = req.body['g-recaptcha-response'];
+    const secretKey = "6LcRLbErAAAAAEBfCbQmXi2F-rSbTgyiHYJQ9_Bn";
+
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
+
+    const response = await fetch(verifyUrl, { method: 'POST' });
+    const data = await response.json();
+
+    if (data.success) {
+        // CAPTCHA passed → process form
+        console.log("Captcha verified successfully.");
+        res.send('Captcha verified successfully.');
+    } else {
+        // CAPTCHA failed → reject\
+        console.log("Captcha verification failed.");
+        res.status(400).send('Captcha verification failed.');
+    }
+};

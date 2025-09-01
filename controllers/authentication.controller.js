@@ -13,7 +13,7 @@ exports.authenticate = async (req, res) => {
         let messagePayload = {};
         const userType = req.body.userType;
 
-        if(userType === "admin") {
+        if (userType === "admin") {
             messagePayload = {
                 external_id: "admin-01976f0f-1ab5-7d63-b123-8e84e9637b5f",
                 email: "admin@email.com",
@@ -27,7 +27,7 @@ exports.authenticate = async (req, res) => {
             if (typeof adminJwtExpiryMinutes === 'number' && adminJwtExpiryMinutes > 0) {
                 messagePayload.exp = Math.floor(Date.now() / 1000) + adminJwtExpiryMinutes * 60;
             }
-        } else if(userType === "newUser") {
+        } else if (userType === "newUser") {
             const prefix = req.body.newUserExternalIdPrefix;
             const uniqueId = uuid.v4();
 

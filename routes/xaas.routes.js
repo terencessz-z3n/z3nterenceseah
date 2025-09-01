@@ -18,5 +18,7 @@ module.exports = app => {
 
     router.get('/getigfollowersbyusername/:username', xaas.getIGFollowersByUsername);
 
+    router.post('/googlecaptcha', xaas.googlerecaptcha);
+
     app.use('/xaas', router);
 }

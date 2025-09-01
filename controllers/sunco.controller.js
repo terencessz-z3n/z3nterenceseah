@@ -4,6 +4,7 @@ const sunco = require('../services/sunco.services');
 exports.webhook = async (req, res) => {
     try {
         console.log('Sunco Webhook Payload:\n', JSON.stringify(req.body, null, 4));
+        //console.log('Sunco Webhook Payload:', req.body);
         const payload = req.body;
         const content = payload.events[0].payload.message.content.text.toLowerCase();
 
